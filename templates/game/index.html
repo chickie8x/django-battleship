@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block blockcontent %}
+    {% csrf_token %}
+    <div class="wrapper col-lg-6 col-md-10 col-sm-12 mx-auto my-2">
+        <div class="row">
+            <button class="create-game-btn btn btn-primary mx-auto my-5" data-user="{{ request.user.id }}"> Create game </button>
+        </div>
+        <div class="row d-flex justify-content-between p-3">
+
+            <div id="lobby">
+                <span>Lobby</span>
+                {% for lobby in lobbies %}
+                    <div class="lobby-item d-flex justify-content-between">
+                        <span>Game {{ lobby.id }}</span>
+                        <a href="gameid/{{ lobby.id }}">Join</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="online-player">
+                <span>Online player</span>
+            </div>
+
+            <div class="leader-board">
+                <span>Leader Board</span>
+            </div>
+
+        </div>
+    </div>
+{% endblock blockcontent %}
+
