@@ -16,6 +16,10 @@ $(document).ready(function(){
         var newgame = document.createElement('div')
         newgame.className='lobby-item'
         newgame.textContent='game id : ' + data.gameid
+        var joinbtn = document.createElement('a')
+        joinbtn.href='gameid/'+ data.gameid
+        joinbtn.innerText='Join'
+        newgame.append(joinbtn)
         lobby.appendChild(newgame)
     };
     

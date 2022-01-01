@@ -64,9 +64,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-
         await self.accept()
-
 
         # player connected detection 
         await self.channel_layer.group_send(
@@ -76,6 +74,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'message': 'connected',
                 'user': str(self.connected_user),
                 'gameid': self.game_id,
+                'userid':self.connected_user.id
             }
         )
 
@@ -108,7 +107,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
         # Send message to game group
         if message == 'marked_cell':
             await self.channel_layer.group_send(
@@ -119,7 +117,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'game': text_data_json['game'],
                     'index': text_data_json['index'],
                     'cell_status': text_data_json['cell_status'],
-                    'message': message,
+                    'message': text_data_json['message'],
+                    'current_turn': text_data_json['current_turn']
                 }
             )
 
@@ -130,12 +129,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         message = event['message']
         user = event['user']
         game_id = event['gameid']
+        user_id = event['userid']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
             'user':user,
             'game': game_id,
+            'userid':user_id
         }))
 
     #user disconnect from game 
@@ -157,6 +158,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         index = event['index']
         message = event['message']
         cell_status = event['cell_status']
+        current_turn_value = event['current_turn']
 
         await self.send(text_data=json.dumps({
             'cell_owner': cell_owner,
@@ -164,6 +166,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             'index': index,
             'cell_status': cell_status,
             'message': message,
+            'current_turn': current_turn_value,
         }))
 
 

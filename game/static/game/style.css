@@ -60,3 +60,13 @@
     background: red;
     color: white;
 }
+
+
+#creator-name, #opponent-name{
+    color: #4b4b4b;
+    font-weight: bold;
+}
+
+.text-chat, .text-input{
+    font-size: 12px;
+}

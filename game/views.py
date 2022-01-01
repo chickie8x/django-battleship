@@ -52,8 +52,7 @@ def logout_view(request):
 
 def index_view(request):
     lobbies = Game.objects.filter(is_waiting = True)
-    print(lobbies)
-
+    
     context = {
         'lobbies': lobbies,
     }
@@ -128,6 +127,7 @@ def game_view(request, gameid):
         'game':game,
         'board_creator':board_creator,
         'board_opponent':board_opponent,
+        'current_turn': game.current_turn
     }
     return  render(request,'game/game.html',context=context)
 
@@ -136,6 +136,13 @@ def play_game(request):
         cell_owner = request.POST['owner']
         cell_map_index =request.POST['index']
         game = request.POST['game']
+        get_game = Game.objects.get(pk = game)
+        if get_game.is_done:
+            return JsonResponse({
+                'status':'is_done'
+                })
+        game_creator = get_game.creator
+        game_opponent = get_game.opponent
         cell = BoardCell.objects.get(owner=cell_owner, map_index = cell_map_index, game = game)
         if cell.status == 'free':
             cell.status = 'selected'
@@ -143,10 +150,48 @@ def play_game(request):
         if cell.status =='ship_pos':
             cell.status = 'ship_selected'
             cell.save()
-        return JsonResponse({
-            'status': 'success',
-            'cell_owner':cell_owner,
-            'game':game,
-            'index': cell_map_index,
-            'cell_status':cell.status,
-        },status=200)
+        owner_cells_creator =  BoardCell.objects.filter(game=game, owner=game_creator)
+        owner_cells_opponent =  BoardCell.objects.filter(game=game, owner=game_opponent)
+        owner_ship = 0
+        opponent_ship = 0
+        for c in owner_cells_creator:
+            if c.status =='ship_pos':
+                owner_ship+=1
+        for c in owner_cells_opponent:
+            if c.status =='ship_pos':
+                opponent_ship +=1
+        if owner_ship==0:
+            get_game.winner = game_opponent
+            get_game.is_done = True
+            get_game.is_waiting = False
+            get_game.save()
+            return JsonResponse({
+                'status': 'won',
+                'winner': game_opponent.username,
+            })
+        elif opponent_ship==0:
+            get_game.winner =game_creator
+            get_game.is_done = True
+            get_game.is_waiting = False
+            get_game.save()
+            return JsonResponse({
+                'status': 'won',
+                'winner': game_creator.username,
+            })
+        else:
+            if request.user == game_creator:
+                get_game.current_turn = game_opponent
+                get_game.save()
+            else:
+                get_game.current_turn = game_creator
+                get_game.save()
+            return JsonResponse({
+                'status': 'success',
+                'cell_owner':cell_owner,
+                'game':game,
+                'index': cell_map_index,
+                'cell_status':cell.status,
+                'current_turn':get_game.current_turn.username
+            })
+    else:
+        return JsonResponse({'message': 'Invalid method'})
