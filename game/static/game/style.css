@@ -70,3 +70,8 @@
 .text-chat, .text-input{
     font-size: 12px;
 }
+
+.final-result{
+    display: flex;
+    justify-content: center;
+}

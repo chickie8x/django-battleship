@@ -64,6 +64,19 @@ window.onload = function(){
                 }
             }
         }
+
+        if(data.message==='end_game'){
+            var el = document.getElementsByClassName('content-wrapper')[0]
+            el.innerHTML=''
+            var result = document.createElement('div')
+            result.className = 'final-result'
+            var el_text = document.createElement('span')
+            el_text.textContent = 'The winner of the game is : '
+            var el_winner =data.final_winner
+            el_text.append(el_winner)
+            el.append(el_text)
+            
+        }
     };
 
     // websocket connection closed
@@ -87,6 +100,7 @@ window.onload = function(){
                 }).then((res)=>{
                     return res.json()
                 }).then(function(data){
+                    console.log(data.status)
                     var status = data.status
                     if(status==='success'){
                         gameSocket.send(JSON.stringify({
@@ -99,10 +113,21 @@ window.onload = function(){
                         }))
                     }
                     if(status==='won'){
-                        console.log(data)
+                        var winner = data.winner
+                        gameSocket.send(JSON.stringify({
+                            'message': 'end_game',
+                            'final_winner': winner
+                        }))
+
                     }
                     if(status==='is_done'){
                         window.location.replace('/')
+                    }
+                    if(status==='wrong_turn'){
+                        alert('it\'s not your turn , wait your opponent to finish their turn ' )
+                    }
+                    if(status==='invalid_selection'){
+                        alert('This cell has been selected before, choose another cell')
                     }
                 })
             }

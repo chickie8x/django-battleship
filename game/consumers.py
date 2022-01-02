@@ -121,6 +121,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'current_turn': text_data_json['current_turn']
                 }
             )
+        if message == 'end_game':
+            await self.channel_layer.group_send(
+                self.game_group_name,
+                {
+                    'type': 'end_game',
+                    'winner': text_data_json['final_winner']
+                }
+            )
 
     # Receive message from game group
 
@@ -169,6 +177,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             'current_turn': current_turn_value,
         }))
 
+    async def end_game(self, event):
+        message = 'end_game'
+        winner = event['winner']
+        await self.send(text_data=json.dumps({
+            'message':message,
+            'final_winner': winner
+        }))
 
     # @database_sync_to_async
     # def player_leave(self):

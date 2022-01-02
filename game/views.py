@@ -82,9 +82,12 @@ def game_view(request, gameid):
     if not request.user.is_authenticated:
         return redirect('login')
     
+    
     if request.user != game.creator and request.user != game.opponent and game.opponent != None:
         return redirect('/')
-
+    if (game.is_done):
+        return redirect('/')
+    
     if request.user == game.creator:
         if game.map_created == False:
             for i in range(100):
@@ -141,9 +144,23 @@ def play_game(request):
             return JsonResponse({
                 'status':'is_done'
                 })
+        
+        # check if player turn is corrected 
+        if request.user != get_game.current_turn:
+            return JsonResponse({
+                'status':'wrong_turn'
+            })
         game_creator = get_game.creator
         game_opponent = get_game.opponent
         cell = BoardCell.objects.get(owner=cell_owner, map_index = cell_map_index, game = game)
+        
+        # check if the selected cell is valid 
+        if cell.status == 'selected' or cell.status =='ship_selected':
+            return JsonResponse({
+                'status':'invalid_selection'
+            })
+
+        # valid cell selected
         if cell.status == 'free':
             cell.status = 'selected'
             cell.save()
@@ -160,6 +177,8 @@ def play_game(request):
         for c in owner_cells_opponent:
             if c.status =='ship_pos':
                 opponent_ship +=1
+        
+        #check if player win the game
         if owner_ship==0:
             get_game.winner = game_opponent
             get_game.is_done = True
