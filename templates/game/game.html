@@ -67,10 +67,11 @@
 
                 <div class="game-chat">
                     <span>Chat</span>
-                    <ul class="text-chat"></ul>
+                    <ul id="text-chat"></ul>
                     <div class="text-input w-100 d-flex justify-content-between">
-                        <input type="text" placeholder="enter messsage here" class="flex-grow-1 mr-2 px-2 py-1">
-                        <input type="submit" value="Send" class="px-2 py-1">
+                        <span id="chat-author" data-author="{{ request.user.username }}"></span>
+                        <input id="text-mes" type="text" placeholder="enter messsage here" class="flex-grow-1 mr-2 px-2 py-1">
+                        <button class="btn btn-primary" id="send-message">Send</button>
                     </div>
                     
                 </div>
@@ -79,31 +80,6 @@
 
         {% else %}
             <div class="board-wrapper d-flex justify-content-center mt-4 mx-auto">
-                <div class="board-creator d-flex justify-content-center mr-5 flex-column">
-                    <div class="current-turn d-flex justify-content-center">                  
-                        <div class="turn-waiting turn-waiting-creator spinner-border text-primary mr-2 d-none" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        <span class="text-center" id="creator-name">{{game.creator}}</span>
-                    </div>               
-                    <div class="board-content">
-                        {% for cell in board_creator %}
-                            {% if cell.status == 'ship_pos' %}
-                                <div class="cell-event cell" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
-                            {% endif %}
-                            {% if cell.status == 'free' %}
-                                <div class="cell-event cell" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
-                            {% endif %}   
-                            {% if cell.status == 'selected' %}
-                                <div class="cell-event cell-selected" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
-                            {% endif %}     
-                            {% if cell.status == 'ship_selected' %}
-                                <div class="cell-event ship-selected" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
-                            {% endif %}            
-                        {% endfor %}
-                    </div>
-                </div>
-
                 <div class="board-opponent d-flex justify-content-center mr-5 flex-column">
                     <div class="current-turn d-flex justify-content-center">     
                         <div class="turn-waiting turn-waiting-opponent spinner-border text-primary mr-2 d-none" role="status">
@@ -129,14 +105,39 @@
                     </div>
                 </div>
 
+                <div class="board-creator d-flex justify-content-center mr-5 flex-column">
+                    <div class="current-turn d-flex justify-content-center">                  
+                        <div class="turn-waiting turn-waiting-creator spinner-border text-primary mr-2 d-none" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <span class="text-center" id="creator-name">{{game.creator}}</span>
+                    </div>               
+                    <div class="board-content">
+                        {% for cell in board_creator %}
+                            {% if cell.status == 'ship_pos' %}
+                                <div class="cell-event cell" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
+                            {% endif %}
+                            {% if cell.status == 'free' %}
+                                <div class="cell-event cell" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
+                            {% endif %}   
+                            {% if cell.status == 'selected' %}
+                                <div class="cell-event cell-selected" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
+                            {% endif %}     
+                            {% if cell.status == 'ship_selected' %}
+                                <div class="cell-event ship-selected" data-user="{{ game.creator.id }}" data-index="{{ cell.map_index }}" data-game="{{ game.id }}" >{{ cell.map_index }}</div>
+                            {% endif %}            
+                        {% endfor %}
+                    </div>
+                </div>
+
                 <div class="game-chat">
                     <span>Chat</span>
-                    <ul class="text-chat"></ul>
+                    <ul id="text-chat"></ul>
                     <div class="text-input w-100 d-flex justify-content-between">
-                        <input type="text" placeholder="enter messsage here" class="flex-grow-1 mr-2 px-2 py-1">
-                        <input type="submit" value="Send" class="px-2 py-1">
+                        <span id="chat-author" data-author="{{ request.user.username }}"></span>
+                        <input id="text-mes" type="text" placeholder="enter messsage here" class="flex-grow-1 mr-2 px-2 py-1">
+                        <button class="btn btn-primary" id="send-message">Send</button>
                     </div>
-                    
                 </div>
                 
             </div>

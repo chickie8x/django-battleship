@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from . import shipmap
-from game.models import Game, BoardCell
+from game.models import Game, BoardCell, Scores
 import json
 
 # Create your views here.
@@ -52,9 +52,11 @@ def logout_view(request):
 
 def index_view(request):
     lobbies = Game.objects.filter(is_waiting = True)
+    leader_board = Scores.objects.order_by('-score')[:9]
     
     context = {
         'lobbies': lobbies,
+        'top_scores':leader_board
     }
 
     return render(request,'game/index.html',context=context)
@@ -184,6 +186,9 @@ def play_game(request):
             get_game.is_done = True
             get_game.is_waiting = False
             get_game.save()
+            user_scrore = Scores.objects.get_or_create(user=game_opponent)[0]
+            user_scrore.score +=1
+            user_scrore.save()
             return JsonResponse({
                 'status': 'won',
                 'winner': game_opponent.username,
@@ -193,6 +198,9 @@ def play_game(request):
             get_game.is_done = True
             get_game.is_waiting = False
             get_game.save()
+            user_scrore = Scores.objects.get_or_create(user=game_creator)[0]
+            user_scrore.score +=1
+            user_scrore.save()
             return JsonResponse({
                 'status': 'won',
                 'winner': game_creator.username,

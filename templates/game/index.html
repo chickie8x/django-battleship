@@ -9,7 +9,7 @@
         <div class="row d-flex justify-content-between p-3">
 
             <div id="lobby">
-                <span>Lobby</span>
+                <h3 class="text-primary">Lobby</h3>
                 {% for lobby in lobbies %}
                     <div class="lobby-item d-flex justify-content-between">
                         <span>Game {{ lobby.id }}</span>
@@ -19,11 +19,21 @@
             </div>
 
             <div class="online-player">
-                <span>Online player</span>
+                <h3 class="text-primary">Online player</h3>
             </div>
 
             <div class="leader-board">
-                <span>Leader Board</span>
+                <h3 class="cleader-board-header text-primary">Leader Board</h3>
+                <div class="leader-board-list">
+                    <ul class="list-users mt-3">
+                        {% for tc in top_scores %}
+                            <li class="top-score-item">
+                                <span class="score-user">{{ tc.user }}</span>
+                                <span class="score-value">{{ tc.score }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
 
         </div>

@@ -65,17 +65,35 @@ window.onload = function(){
             }
         }
 
+        // game finish
         if(data.message==='end_game'){
             var el = document.getElementsByClassName('content-wrapper')[0]
             el.innerHTML=''
             var result = document.createElement('div')
             result.className = 'final-result'
             var el_text = document.createElement('span')
+            el_text.className = 'winner-notice'
             el_text.textContent = 'The winner of the game is : '
-            var el_winner =data.final_winner
+            var el_winner = document.createElement('span')
+            el_winner.className = 'winner-name'
+            el_winner.textContent = data.final_winner 
             el_text.append(el_winner)
             el.append(el_text)
             
+        }
+
+        if(data.message ==='chat'){
+            var listChat = document.getElementById('text-chat')
+            var chatItem = document.createElement('li')
+            chatItem.className = 'chat-item'
+            var chatAuthor = document.createElement('span')
+            chatAuthor.className ='chat-author'
+            chatAuthor.textContent = data.author + ' : '
+            var chatMes = document.createElement('span')
+            chatMes.textContent = data.chat_message
+            chatItem.append(chatAuthor)
+            chatItem.append(chatMes)
+            listChat.append(chatItem)
         }
     };
 
@@ -137,6 +155,29 @@ window.onload = function(){
             
         })
     }
+
+
+    // send chat message
+    var messageText = document.getElementById('text-mes')
+    var userSent = document.getElementById('chat-author')
+    function sendChat(){      
+        gameSocket.send(JSON.stringify({
+            'message':'chat',
+            'author':userSent.dataset.author,
+            'chat_message':messageText.value
+        }))
+        messageText.value =''
+    }
+
+    var sendBtn = document.getElementById('send-message')
+    sendBtn.addEventListener('click', sendChat)
+
+    messageText.onkeyup = function(e){
+        if(e.keyCode === 13){
+            sendChat()
+        }
+    }
+
 
 }
 
