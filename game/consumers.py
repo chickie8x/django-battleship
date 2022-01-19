@@ -17,7 +17,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.lobby_group_name,
             self.channel_name,
         )
-
+        print(self.scope['path'])
         await self.accept()
 
 

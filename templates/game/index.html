@@ -4,7 +4,12 @@
     {% csrf_token %}
     <div class="wrapper col-lg-6 col-md-10 col-sm-12 mx-auto my-2">
         <div class="row">
-            <button class="create-game-btn btn btn-primary mx-auto my-5" data-user="{{ request.user.id }}"> Create game </button>
+            {% if request.user.is_authenticated %}
+                <button class="create-game-btn btn btn-primary mx-auto my-5" data-user="{{ request.user.id }}"> Create game </button>
+            {% else %}
+                <a href=" {% url 'login' %} " class="btn btn-primary my-5 mx-auto">Login to start playing</a>
+            {% endif %}
+            
         </div>
         <div class="row d-flex justify-content-between p-3">
 
