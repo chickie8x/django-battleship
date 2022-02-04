@@ -7,6 +7,11 @@ from . import shipmap
 from game.models import Game, BoardCell, Scores
 import json
 
+# matchmaking queue to  store all users that finding match 
+matchmaking_queue = []
+
+
+
 # Create your views here.
 
 def login_view(request):
@@ -76,7 +81,7 @@ def create_game(request):
 
 def game_view(request, gameid):
     game = Game.objects.get(pk=gameid)
-    maps = shipmap.maps;
+    maps = shipmap.maps
     ships_creator = shipmap.gen_map(maps)
     ships_opponent = shipmap.gen_map(maps)
     board_opponent =[]
@@ -222,3 +227,9 @@ def play_game(request):
             })
     else:
         return JsonResponse({'message': 'Invalid method'})
+
+
+def matchmaking(request):
+    # user = request.user.id
+    # matchmaking_queue.append(user)
+    return render(request,'game/matchmaking.html',{})

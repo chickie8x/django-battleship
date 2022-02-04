@@ -79,6 +79,10 @@ window.onload = function(){
             el_winner.textContent = data.final_winner 
             el_text.append(el_winner)
             el.append(el_text)
+            var backBtn = document.createElement('button')
+            backBtn.classList.add('btn', 'btn-primary', 'leave-game-btn')
+            backBtn.innerHTML='Leave game'
+            el.append(backBtn)
             
         }
 

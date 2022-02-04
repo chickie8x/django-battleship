@@ -57,14 +57,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.game_id = self.scope['url_route']['kwargs']['gameid']
         self.game_group_name = 'game_%s' % self.game_id
         self.connected_user = self.scope['user']
-
+        
         await self.channel_layer.group_add(
             self.game_group_name,
             self.channel_name
         )
 
         await self.accept()
-
         # player connected detection 
         await self.channel_layer.group_send(
             self.game_group_name,
