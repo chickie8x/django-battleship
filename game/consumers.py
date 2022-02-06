@@ -64,7 +64,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print(self.channel_layer.groups)
         # player connected detection 
         await self.channel_layer.group_send(
             self.game_group_name,
