@@ -233,3 +233,6 @@ def matchmaking(request):
     # user = request.user.id
     # matchmaking_queue.append(user)
     return render(request,'game/matchmaking.html',{})
+
+
+    

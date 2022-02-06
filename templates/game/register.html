@@ -4,7 +4,7 @@
 {% block blockcontent %}
 
 <div class="register-wrapper col-lg-4 col-md-8 col-sm-11 mx-auto my-5">
-    <h2>Sign up</h2>
+    <h2 class="text-center text-primary p-4">Sign up</h2>
     <form method="post" class="form-group d-flex flex-column">
     {% csrf_token %}
     {{ form.as_p }}

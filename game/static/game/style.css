@@ -17,6 +17,11 @@
     border: solid 1px gray;
     padding: 12px;
     list-style: none;
+    overflow: scroll;
+}
+
+#text-chat::-webkit-scrollbar{
+    display: none;
 }
 
 .chat-item{
@@ -114,4 +119,31 @@
 .leave-game-btn{
     width: fit-content;
     margin: auto;
+}
+
+.errorlist li{
+    color: red;
+    font-weight: bold;
+}
+
+.disconnected-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: red;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.connected-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgb(4, 167, 4);
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.disconnected-text, .connected-text{
+    color: rgb(175, 173, 173);
 }

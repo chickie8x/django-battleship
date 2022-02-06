@@ -6,6 +6,7 @@ window.onload = function(){
     const csrf = document.getElementsByTagName('input')[0].value
     var cells = document.getElementsByClassName('cell-event')
     var current_user = document.getElementById('current-user').dataset.currentid
+    var listChat = document.getElementById('text-chat')
 
     // init the websocket connection 
     const gameSocket = new WebSocket(
@@ -20,9 +21,19 @@ window.onload = function(){
     gameSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
 
-        // user left the game 
+        // user left the game, show a notification with a red dot into chat frame
         if (data.message === 'left'){
-            alert(data.user + ' was left the game')
+            var disNoti = document.createElement('li')
+            disNoti.className = 'chat-item'
+            var disconnectedDot = document.createElement('span')
+            disconnectedDot.className='disconnected-dot'
+            disNoti.append(disconnectedDot)
+            var disconnectedText = document.createElement('span')
+            disconnectedText.className='disconnected-text'
+            disconnectedText.textContent= data.user + ' has disconnected!'
+            disNoti.append(disconnectedText)
+            listChat.append(disNoti)
+            listChat.scrollTop = listChat.scrollHeight
         }
 
         // user connected game
@@ -39,6 +50,19 @@ window.onload = function(){
                     }
                 }
             }
+
+            // add a notification with a green dot when a user connected to game into chat frame
+            var connectedNoti = document.createElement('li')
+            connectedNoti.className='chat-item'
+            var connectedDot = document.createElement('span')
+            connectedDot.className='connected-dot'
+            connectedNoti.append(connectedDot)
+            var connectedText = document.createElement('span')
+            connectedText.className ='disconnected-text'
+            connectedText.textContent= data.user + ' has connected'
+            connectedNoti.append(connectedText)
+            listChat.append(connectedNoti)
+            listChat.scrollTop = listChat.scrollHeight
         }
 
         // player mark a cell , switch player turn
@@ -83,11 +107,13 @@ window.onload = function(){
             backBtn.classList.add('btn', 'btn-primary', 'leave-game-btn')
             backBtn.innerHTML='Leave game'
             el.append(backBtn)
+            backBtn.addEventListener('click', function(){
+                window.location.replace('/');
+            })
             
         }
 
         if(data.message ==='chat'){
-            var listChat = document.getElementById('text-chat')
             var chatItem = document.createElement('li')
             chatItem.className = 'chat-item'
             var chatAuthor = document.createElement('span')
@@ -98,6 +124,7 @@ window.onload = function(){
             chatItem.append(chatAuthor)
             chatItem.append(chatMes)
             listChat.append(chatItem)
+            listChat.scrollTop = listChat.scrollHeight
         }
     };
 
@@ -181,7 +208,6 @@ window.onload = function(){
             sendChat()
         }
     }
-
 
 }
 
